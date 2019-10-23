@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 class AjaxController extends Controller
 {
   public function index() {
-    $currencyRates = DB::select('select quote, rate from currency_rates');
+    $currencyRates = DB::table('currency_rates')->select('quote', 'rate')->get();
 
     return response()->json(array('data'=> $currencyRates), 200);
    }

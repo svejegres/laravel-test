@@ -39,11 +39,18 @@ class Kernel extends ConsoleKernel
 
         // store obtained quote rates into database:
         foreach ($rates['quotes'] as $quote => $rate) {
-          $checkQuote = DB::select('select quote from currency_rates where quote = ?', [$quote]);
+          $dbTable = 'currency_rates';
+
+          $checkQuote = DB::table($dbTable)->select('quote')->where('quote', $quote)->first();
           if ($checkQuote) {
-            DB::update('update currency_rates set rate = ? where quote = ?', [$rate, $quote]);
+            DB::table($dbTable)
+            ->where('quote', $quote)
+            ->update(['rate' => $rate]);
           } else {
-            DB::insert('insert into currency_rates (quote, rate) values (?, ?)', [$quote, $rate]);
+            DB::table($dbTable)->insert([
+              'quote' => $quote,
+              'rate' => $rate
+            ]);
           }
         }
       })->cron('0 */4 * * *');
