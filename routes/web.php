@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/test', function () {
+    return view('testview');
+})->middleware('custom');
+
+Route::post('/getmsg','AjaxController@index');
